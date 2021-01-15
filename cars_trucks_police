@@ -1,0 +1,16 @@
+from fastbook import *
+from fastai.vision.all import * 
+from fastai.vision.widgets import *
+
+path = Path('Vehicles')
+learn_inf = load_learner(path/'export.pkl')
+uploader = widgets.FileUpload()
+out_pl = widgets.Output()
+
+
+def on_click_classify(change):
+    img= PILImage.create(uploader.data[-1])
+    out_pl.clear_output()
+    with out_pl: display(img.to_thumb(128,128))
+    pred,pred_idx,probs = learn_inf.predict(img)
+    prompt.value = f'Prediction: {pred}; Probability: {probs[pred_idx]:.04f}'
